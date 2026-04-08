@@ -1,0 +1,22 @@
+# Security / Environment Variables
+.env
+.env.*
+
+# Virtual Environments
+venv/
+.venv/
+env/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
+
+# Project Artifacts (Optional: to keep your repo clean of test runs)
+*.csv
+*.json
+*.parquet
