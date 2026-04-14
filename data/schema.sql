@@ -1,0 +1,61 @@
+-- SQLite Schema for Translation Project
+
+CREATE TABLE Languages (
+    LangID TEXT PRIMARY KEY NOT NULL, -- Two Letter Standard Language Code
+    Name TEXT NOT NULL,
+    Family TEXT NOT NULL,
+    Region TEXT NOT NULL
+);
+
+CREATE TABLE Model (
+    ModelID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    Name TEXT NOT NULL,
+    Version TEXT NOT NULL
+);
+
+CREATE TABLE Settings (
+    SettingID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+);
+
+CREATE TABLE Ratings (
+    RatingID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+);
+
+CREATE TABLE Documents (
+    DocumentID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    Name TEXT NOT NULL,
+    Type TEXT NOT NULL,
+    OriginalLanguage TEXT NOT NULL,
+    Description TEXT NOT NULL,
+    FOREIGN KEY (OriginalLanguage) REFERENCES Languages(LangID)
+);
+
+CREATE TABLE Refrences (
+    RefrenceID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    Name TEXT NOT NULL,
+    Document INTEGER NOT NULL,
+    Language TEXT NOT NULL,
+    Text TEXT NOT NULL,
+    FOREIGN KEY (Document) REFERENCES Documents(DocumentID),
+    FOREIGN KEY (Language) REFERENCES Languages(LangID)
+);
+
+CREATE TABLE Translations (
+    TranslationID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    Name TEXT NOT NULL,
+    Refrence INTEGER,
+    Translation INTEGER,
+    Language TEXT NOT NULL,
+    PreviousLanguage TEXT NOT NULL,
+    Text TEXT NOT NULL,
+    Model INTEGER NOT NULL,
+    Settings INTEGER NOT NULL,
+    Ratings INTEGER NOT NULL,
+    FOREIGN KEY (Refrence) REFERENCES Refrences(RefrenceID),
+    FOREIGN KEY (Translation) REFERENCES Translations(TranslationID),
+    FOREIGN KEY (Language) REFERENCES Languages(LangID),
+    FOREIGN KEY (PreviousLanguage) REFERENCES Languages(LangID),
+    FOREIGN KEY (Model) REFERENCES Model(ModelID),
+    FOREIGN KEY (Settings) REFERENCES Settings(SettingID),
+    FOREIGN KEY (Ratings) REFERENCES Ratings(RatingID)
+);
