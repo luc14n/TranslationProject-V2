@@ -1,0 +1,15 @@
+--- TRANSLATION DRIFT REPORT ---
+
+ORIGINAL TEXT:
+The new software update is a double-edged sword; it fixes the bugs but completely throws a wrench in our current workflow.
+
+ROUTING PATH TAKEN:
+ - Hop 1: English (English) -> Germanic (Swedish)
+ - Hop 2: Germanic (Dutch) -> Romantic (French)
+ - Hop 3: Romantic (French) -> Slavic (Russian)
+ - Hop 4: Slavic (Russian) -> Western Asian (Hebrew)
+ - Hop 5: Western Asian (Arabic) -> Eastern Asian (Mandarin Chinese)
+ - Hop 6: Eastern Asian (Japanese) -> English (English)
+
+FINAL BACK-TRANSLATION (ENGLISH):
+The new software update is a double-edged sword; it fixes bugs but completely disrupts our current workflow.
