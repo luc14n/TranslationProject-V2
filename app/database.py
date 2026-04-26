@@ -3,12 +3,12 @@ import sqlite3
 from pathlib import Path
 
 
-def init_dummy_database(db_name: str = "app_data.db"):
+def init_dummy_database(db_name: str = "data/app_data.db"):
     """Creates a SQLite database using schema.sql and populates sample data."""
 
     # Optional: remove the existing DB to start fresh with the new schema
     if os.path.exists(db_name):
-        os.remove(db_name)
+        return  # Skip re-initialization if the database already exists
 
     con = sqlite3.connect(db_name)
     cur = con.cursor()

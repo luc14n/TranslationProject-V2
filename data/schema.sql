@@ -27,7 +27,7 @@ CREATE TABLE Documents (
     Type TEXT NOT NULL,
     OriginalLanguage TEXT NOT NULL,
     Description TEXT NOT NULL,
-    FOREIGN KEY (OriginalLanguage) REFERENCES Languages(LangID)
+    FOREIGN KEY (OriginalLanguage) REFERENCES Languages(id)
 );
 
 CREATE TABLE Refrences (
@@ -37,7 +37,7 @@ CREATE TABLE Refrences (
     Language TEXT NOT NULL,
     Text TEXT NOT NULL,
     FOREIGN KEY (Document) REFERENCES Documents(DocumentID),
-    FOREIGN KEY (Language) REFERENCES Languages(LangID)
+    FOREIGN KEY (Language) REFERENCES Languages(id)
 );
 
 CREATE TABLE Translations (
@@ -53,8 +53,8 @@ CREATE TABLE Translations (
     Ratings INTEGER NOT NULL,
     FOREIGN KEY (Refrence) REFERENCES Refrences(RefrenceID),
     FOREIGN KEY (Translation) REFERENCES Translations(TranslationID),
-    FOREIGN KEY (Language) REFERENCES Languages(LangID),
-    FOREIGN KEY (PreviousLanguage) REFERENCES Languages(LangID),
+    FOREIGN KEY (Language) REFERENCES Languages(id),
+    FOREIGN KEY (PreviousLanguage) REFERENCES Languages(id),
     FOREIGN KEY (Model) REFERENCES Model(ModelID),
     FOREIGN KEY (Settings) REFERENCES Settings(SettingID),
     FOREIGN KEY (Ratings) REFERENCES Ratings(RatingID)
