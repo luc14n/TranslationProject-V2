@@ -47,13 +47,15 @@ def init_dummy_database(db_name: str = "./data/app_data.db"):
     )
 
     # 2. Models
-    models = [("GPT-4", "Turbo"), ("Claude 3", "Opus"), ("Llama 3", "70B")]
+    dict_path = Path(__file__).parent.parent / "data" / "init" / "Models.json"
+    with open(dict_path, "r", encoding="utf-8") as f:
+        model_data = json.load(f)
+
+    models = [(name, versions[0]) for name, versions in model_data.items()]
+
     cur.executemany("INSERT INTO Model (Name, Version) VALUES (?, ?)", models)
 
-    # 3. Settings & Ratings (Currently just auto-incrementing IDs in the schema)
-    for _ in range(3):
-        cur.execute("INSERT INTO Settings DEFAULT VALUES")
-        cur.execute("INSERT INTO Ratings DEFAULT VALUES")
+    # 3. Settings & Ratings - Uninitialized for now, can be populated as needed
 
     # 4. Documents
     documents = [
