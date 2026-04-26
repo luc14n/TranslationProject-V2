@@ -67,6 +67,8 @@ def init_dummy_database(
 
     if documents_dir.exists():
         for doc_file in documents_dir.glob("*.json"):
+            if doc_file.name == ".template.json":
+                continue
             with open(doc_file, "r", encoding="utf-8") as f:
                 doc_data = json.load(f)
 
