@@ -1,15 +1,73 @@
---- TRANSLATION DRIFT REPORT ---
+=== MULTILINGUAL SEMANTIC DRIFT REPORT ===
+Generated on: 2026-04-25 23:16:58
 
-ORIGINAL TEXT:
-The new software update is a double-edged sword; it fixes the bugs but completely throws a wrench in our current workflow.
+[ORIGINAL SOURCE TEXT]
+If you can keep your head when all about you
+    Are losing theirs and blaming it on you,
+If you can trust yourself when all men doubt you,
+    But make allowance for their doubting too;
 
-ROUTING PATH TAKEN:
- - Hop 1: English (English) -> Germanic (Swedish)
- - Hop 2: Germanic (Dutch) -> Romantic (French)
- - Hop 3: Romantic (French) -> Slavic (Russian)
- - Hop 4: Slavic (Russian) -> Western Asian (Hebrew)
- - Hop 5: Western Asian (Arabic) -> Eastern Asian (Mandarin Chinese)
- - Hop 6: Eastern Asian (Japanese) -> English (English)
+=== INTERMEDIATE HOPS & DIAGNOSTIC METRICS ===
 
-FINAL BACK-TRANSLATION (ENGLISH):
-The new software update is a double-edged sword; it fixes bugs but completely disrupts our current workflow.
+>> Hop 1: English (English) -> Germanic (Swedish)
+Text: Om du kan behålla ditt lugn när alla omkring dig
+    Tappar sitt och skyller på dig,
+Om du kan lita ...
+LaBSE Global Retention: 0.8417
+Verified Historical Fidelity: [N/A]
+Type-Token Ratio (Morphology): 0.7143
+----------------------------------------
+
+>> Hop 2: Germanic (Swedish) -> Romantic (Spanish)
+Text: Si puedes mantener la calma cuando todos a tu alrededor
+    Pierden la suya y te culpan a ti,
+Si pue...
+LaBSE Global Retention: 0.8907
+Verified Historical Fidelity: 0.9392
+Type-Token Ratio (Morphology): 0.7500
+----------------------------------------
+
+>> Hop 3: Romantic (Spanish) -> Slavic (Czech)
+Text: Pokud můžeš zachovat klid, když všichni kolem tebe
+    Ztrácejí ten svůj a obviňují tě,
+Pokud můžeš ...
+LaBSE Global Retention: 0.8774
+Verified Historical Fidelity: 0.6623
+Type-Token Ratio (Morphology): 0.8710
+----------------------------------------
+
+>> Hop 4: Slavic (Czech) -> Western Asian (Arabic)
+Text: إذا كنت تستطيع الحفاظ على هدوئك عندما يفقد الجميع من حولك هدوءهم ويتهمونك،  
+إذا كنت تستطيع أن تؤمن ...
+LaBSE Global Retention: 0.8505
+Verified Historical Fidelity: 0.8818
+Type-Token Ratio (Morphology): 0.8333
+----------------------------------------
+
+>> Hop 5: Western Asian (Arabic) -> Eastern Asian (Korean)
+Text: 당신이 주변의 모든 사람들이 평정을 잃고 당신을 비난할 때에도 침착함을 유지할 수 있다면,  
+모두가 당신을 의심할 때에도 스스로를 믿을 수 있다면,  
+그러나 그들의 의심도 고려...
+LaBSE Global Retention: 0.7975
+Verified Historical Fidelity: [N/A]
+Type-Token Ratio (Morphology): 0.7778
+Character-to-Meaning Density: 2.9630
+----------------------------------------
+
+>> Hop 6: Eastern Asian (Korean) -> English (English)
+Text: If you can remain calm even when everyone around you loses their composure and blames you,  
+if you ...
+LaBSE Global Retention: 0.8535
+Verified Historical Fidelity: [N/A]
+Type-Token Ratio (Morphology): 0.6452
+----------------------------------------
+
+=== FINAL BACK-TRANSLATION (ENGLISH) ===
+If you can remain calm even when everyone around you loses their composure and blames you,  
+if you can trust yourself even when everyone doubts you,  
+but also consider their doubts;
+
+=== LLM JUDGE EVALUATION ===
+Retention Score: 85.0%
+Analysis: The back-translated text retains the overall meaning and tone of the original, but some nuances are lost, particularly the emphasis on maintaining one's head and the specific phrasing of 'make allowance for their doubting.'
+Omissions: the phrase 'keep your head', the specific wording 'make allowance for their doubting'

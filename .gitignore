@@ -2,9 +2,6 @@
 .env
 .env.*
 
-# Allows the example file to be tracked
-!.env.example
-
 # Virtual Environments
 venv/
 .venv/
