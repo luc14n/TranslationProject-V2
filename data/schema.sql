@@ -1,8 +1,7 @@
 -- SQLite Schema for Translation Project
 
 CREATE TABLE Languages (
-    LangID TEXT PRIMARY KEY NOT NULL, -- Two Letter Standard Language Code
-    Name TEXT NOT NULL,
+    Name TEXT PRIMARY KEY NOT NULL,
     Family TEXT NOT NULL,
     Region TEXT
 );
@@ -26,7 +25,7 @@ CREATE TABLE Documents (
     Name TEXT NOT NULL,
     Type TEXT NOT NULL,
     OriginalLanguage TEXT NOT NULL,
-    Description TEXT NOT NULL,
+    Description TEXT,
     FOREIGN KEY (OriginalLanguage) REFERENCES Languages(id)
 );
 
@@ -43,6 +42,7 @@ CREATE TABLE Refrences (
 CREATE TABLE Translations (
     TranslationID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     Name TEXT NOT NULL,
+    Document INTEGER NOT NULL,
     Refrence INTEGER,
     Translation INTEGER,
     Language TEXT NOT NULL,

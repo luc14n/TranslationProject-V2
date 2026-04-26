@@ -1,30 +1,30 @@
 {
   "English": {
-    "English": ["en", "English", "Global"]
+    "English": ["English", "Global"]
   },
   "Germanic": {
-    "German": ["de", "German", "Global"],
-    "Dutch": ["nl", "Dutch", "Global"],
-    "Swedish": ["sv", "Swedish", "Global"]
+    "German": ["German", "Global"],
+    "Dutch": ["Dutch", "Global"],
+    "Swedish": ["Swedish", "Global"]
   },
   "Romantic": {
-    "Spanish": ["es", "Spanish", "Global"],
-    "French": ["fr", "French", "Global"],
-    "Italian": ["it", "Italian", "Global"]
+    "Spanish": ["Spanish", "Global"],
+    "French": ["French", "Global"],
+    "Italian": ["Italian", "Global"]
   },
   "Slavic": {
-    "Russian": ["ru", "Russian", "Global"],
-    "Polish": ["pl", "Polish", "Global"],
-    "Czech": ["cs", "Czech", "Global"]
+    "Russian": ["Russian", "Global"],
+    "Polish": ["Polish", "Global"],
+    "Czech": ["Czech", "Global"]
   },
   "Western Asian": {
-    "Arabic": ["ar", "Arabic", "Global"],
-    "Hebrew": ["he", "Hebrew", "Global"],
-    "Farsi": ["fa", "Farsi", "Global"]
+    "Arabic": ["Arabic", "Global"],
+    "Hebrew": ["Hebrew", "Global"],
+    "Farsi": ["Farsi", "Global"]
   },
   "Eastern Asian": {
-    "Mandarin Chinese": ["zh", "Mandarin Chinese", "Global"],
-    "Japanese": ["ja", "Japanese", "Global"],
-    "Korean": ["ko", "Korean", "Global"]
+    "Mandarin Chinese": ["Mandarin Chinese", "Global"],
+    "Japanese": ["Japanese", "Global"],
+    "Korean": ["Korean", "Global"]
   }
 }

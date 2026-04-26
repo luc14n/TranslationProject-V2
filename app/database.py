@@ -38,11 +38,11 @@ def init_dummy_database(db_name: str = "./data/app_data.db"):
     languages = []
     for family, langs in language_data.items():
         for lang_name, details in langs.items():
-            lang_id, name, region = details
-            languages.append((lang_id.upper(), name, family, region))
+            name, region = details
+            languages.append((name, family, region))
 
     cur.executemany(
-        "INSERT INTO Languages (LangID, Name, Family, Region) VALUES (?, ?, ?, ?)",
+        "INSERT INTO Languages (Name, Family, Region) VALUES (?, ?, ?)",
         languages,
     )
 
@@ -56,66 +56,45 @@ def init_dummy_database(db_name: str = "./data/app_data.db"):
     cur.executemany("INSERT INTO Model (Name, Version) VALUES (?, ?)", models)
 
     # 3. Settings & Ratings - Uninitialized for now, can be populated as needed
+    for _ in range(3):
+        cur.execute("INSERT INTO Settings DEFAULT VALUES")
+        cur.execute("INSERT INTO Ratings DEFAULT VALUES")
 
-    # 4. Documents
-    documents = [
-        ("Welcome Guide", "Manual", "EN", "A short introductory manual."),
-        ("Product Description", "Marketing", "ES", "Marketing copy for the new tool."),
-    ]
-    cur.executemany(
-        "INSERT INTO Documents (Name, Type, OriginalLanguage, Description) VALUES (?, ?, ?, ?)",
-        documents,
-    )
+    # 4. Documents, References, and Translations
+    documents_dir = Path(__file__).parent.parent / "data" / "init" / "documents"
 
-    # 5. Refrences (References)
-    refrences = [
-        ("Intro_Greeting", 1, "EN", "Welcome to our application."),
-        (
-            "Feature_List",
-            1,
-            "EN",
-            "This application supports translation and data viewing.",
-        ),
-        ("Promo_Title", 2, "ES", "¡Descubre la nueva herramienta!"),
-    ]
-    cur.executemany(
-        "INSERT INTO Refrences (Name, Document, Language, Text) VALUES (?, ?, ?, ?)",
-        refrences,
-    )
+    if documents_dir.exists():
+        for doc_file in documents_dir.glob("*.json"):
+            with open(doc_file, "r", encoding="utf-8") as f:
+                doc_data = json.load(f)
 
-    # 6. Translations
-    translations = [
-        (
-            "Intro_Greeting_ES",
-            1,  # Refrence ID
-            None,  # Translation ID (if referencing another translation)
-            "ES",  # Language
-            "EN",  # PreviousLanguage
-            "Bienvenido a nuestra aplicación.",  # Text
-            1,  # Model ID
-            1,  # Settings ID
-            1,  # Ratings ID
-        ),
-        (
-            "Feature_List_FR",
-            2,  # Refrence ID
-            None,
-            "FR",  # Language
-            "EN",  # PreviousLanguage
-            "Cette application prend en charge la traduction et la visualisation des données.",  # Text
-            2,  # Model ID
-            1,
-            2,
-        ),
-    ]
-    cur.executemany(
-        """
-        INSERT INTO Translations
-        (Name, Refrence, Translation, Language, PreviousLanguage, Text, Model, Settings, Ratings)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """,
-        translations,
-    )
+            name = doc_data.get("name")
+            doc_type = doc_data.get("type")
+            original_language = doc_data.get("original_language")
+            source_text = doc_data.get("source_text")
+            translations = doc_data.get("translations", {})
+
+            # Insert Document
+            cur.execute(
+                "INSERT INTO Documents (Name, Type, OriginalLanguage, Description) VALUES (?, ?, ?, ?)",
+                (name, doc_type, original_language, ""),
+            )
+            document_id = cur.lastrowid
+
+            # Insert Reference
+            ref_name = f"{name}_Source"
+            cur.execute(
+                "INSERT INTO Refrences (Name, Document, Language, Text) VALUES (?, ?, ?, ?)",
+                (ref_name, document_id, original_language, source_text),
+            )
+
+            # Insert Vetted Translations as References
+            for lang, text in translations.items():
+                trans_name = f"{name}_{lang}"
+                cur.execute(
+                    "INSERT INTO Refrences (Name, Document, Language, Text) VALUES (?, ?, ?, ?)",
+                    (trans_name, document_id, lang, text),
+                )
 
     con.commit()
     con.close()
