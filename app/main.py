@@ -1,5 +1,6 @@
 import sqlite3
 import sys
+from pathlib import Path
 
 # Local module imports
 from canvas import MplCanvas
@@ -7,6 +8,7 @@ from database import init_dummy_database
 from PyQt6.QtSql import QSqlDatabase, QSqlTableModel
 from PyQt6.QtWidgets import (
     QApplication,
+    QComboBox,
     QFileDialog,
     QLabel,
     QMainWindow,
@@ -27,7 +29,7 @@ class MainWindow(QMainWindow):
         self.resize(800, 600)
 
         # Set up a dummy database for demonstration
-        self.db_name = "app_data.db"
+        self.db_name = str(Path(__file__).parent.parent / "data" / "app_data.db")
         init_dummy_database(self.db_name)
 
         # Main Layout (Tabbed Interface)
@@ -52,10 +54,20 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, "Database Error", "Could not open database.")
             return
 
+        # Setup Table Selector
+        self.table_selector = QComboBox()
+        self.table_selector.addItems(self.db.tables())
+        self.table_selector.currentTextChanged.connect(self.change_table_view)
+        layout.addWidget(self.table_selector)
+
         # Setup Table Model
         self.model = QSqlTableModel(self, self.db)
-        self.model.setTable("Translations")
-        self.model.select()
+
+        # Select initially chosen table
+        initial_table = self.table_selector.currentText()
+        if initial_table:
+            self.model.setTable(initial_table)
+            self.model.select()
 
         # Setup Table View
         self.table_view = QTableView()
@@ -64,6 +76,11 @@ class MainWindow(QMainWindow):
 
         tab.setLayout(layout)
         self.tabs.addTab(tab, "Database Viewer")
+
+    def change_table_view(self, table_name):
+        """Updates the table model when a new table is selected."""
+        self.model.setTable(table_name)
+        self.model.select()
 
     # --- Tab 2: Matplotlib Graphing ---
     def init_graph_tab(self):
@@ -85,8 +102,8 @@ class MainWindow(QMainWindow):
         """Fetches data from SQLite and plots it on the canvas."""
         con = sqlite3.connect(self.db_name)
         cur = con.cursor()
-        # Count translations by target language
-        cur.execute("SELECT Language, COUNT(*) FROM Translations GROUP BY Language")
+        # Count references by target language
+        cur.execute("SELECT Language, COUNT(*) FROM Refrences GROUP BY Language")
         data = cur.fetchall()
         con.close()
 
@@ -95,8 +112,8 @@ class MainWindow(QMainWindow):
 
         self.canvas.axes.cla()  # Clear current axes
         self.canvas.axes.bar(languages, counts, color="skyblue")
-        self.canvas.axes.set_title("Translations per Language")
-        self.canvas.axes.set_ylabel("Number of Translations")
+        self.canvas.axes.set_title("References per Language")
+        self.canvas.axes.set_ylabel("Number of References")
         self.canvas.draw()
 
     # --- Tab 3: File Management ---

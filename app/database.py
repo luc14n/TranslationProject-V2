@@ -4,7 +4,9 @@ import sqlite3
 from pathlib import Path
 
 
-def init_dummy_database(db_name: str = "./data/app_data.db"):
+def init_dummy_database(
+    db_name: str = str(Path(__file__).parent.parent / "data" / "app_data.db"),
+):
     """Creates a SQLite database using schema.sql and populates sample data."""
 
     # Optional: remove the existing DB to start fresh with the new schema
