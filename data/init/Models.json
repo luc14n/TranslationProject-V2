@@ -1,0 +1,17 @@
+{
+  "google_gemini": [
+    "gemini-2.5-flash"
+  ],
+  "openai": [
+    "gpt-4o-mini"
+  ],
+  "anthropic_claude": [
+    "claude-sonnet-4-6"
+  ],
+  "deepseek": [
+    "deepseek-chat"
+  ],
+  "moonshot_kimi": [
+    "moonshot-v1-8k"
+  ]
+}

@@ -1,14 +1,16 @@
+import json
 import os
 import sqlite3
 from pathlib import Path
 
 
-def init_dummy_database(db_name: str = "data/app_data.db"):
+def init_dummy_database(db_name: str = "./data/app_data.db"):
     """Creates a SQLite database using schema.sql and populates sample data."""
 
     # Optional: remove the existing DB to start fresh with the new schema
     if os.path.exists(db_name):
-        return  # Skip re-initialization if the database already exists
+        os.remove(db_name)
+        # return  # Skip re-initialization if the database already exists
 
     con = sqlite3.connect(db_name)
     cur = con.cursor()
@@ -24,15 +26,21 @@ def init_dummy_database(db_name: str = "data/app_data.db"):
         print(f"Warning: Could not find schema.sql at {schema_path}")
         return
 
-    # --- Populate Dummy Data ---
+    # --- Populate Initial Data ---
 
     # 1. Languages
-    languages = [
-        ("EN", "English", "Indo-European", "Global"),
-        ("ES", "Spanish", "Indo-European", "Global"),
-        ("FR", "French", "Indo-European", "Europe"),
-        ("DE", "German", "Indo-European", "Europe"),
-    ]
+    dict_path = (
+        Path(__file__).parent.parent / "data" / "init" / "LanguageDictionary.json"
+    )
+    with open(dict_path, "r", encoding="utf-8") as f:
+        language_data = json.load(f)
+
+    languages = []
+    for family, langs in language_data.items():
+        for lang_name, details in langs.items():
+            lang_id, name, region = details
+            languages.append((lang_id.upper(), name, family, region))
+
     cur.executemany(
         "INSERT INTO Languages (LangID, Name, Family, Region) VALUES (?, ?, ?, ?)",
         languages,

@@ -1,0 +1,30 @@
+{
+  "English": {
+    "English": ["en", "English", "Global"]
+  },
+  "Germanic": {
+    "German": ["de", "German", "Global"],
+    "Dutch": ["nl", "Dutch", "Global"],
+    "Swedish": ["sv", "Swedish", "Global"]
+  },
+  "Romantic": {
+    "Spanish": ["es", "Spanish", "Global"],
+    "French": ["fr", "French", "Global"],
+    "Italian": ["it", "Italian", "Global"]
+  },
+  "Slavic": {
+    "Russian": ["ru", "Russian", "Global"],
+    "Polish": ["pl", "Polish", "Global"],
+    "Czech": ["cs", "Czech", "Global"]
+  },
+  "Western Asian": {
+    "Arabic": ["ar", "Arabic", "Global"],
+    "Hebrew": ["he", "Hebrew", "Global"],
+    "Farsi": ["fa", "Farsi", "Global"]
+  },
+  "Eastern Asian": {
+    "Mandarin Chinese": ["zh", "Mandarin Chinese", "Global"],
+    "Japanese": ["ja", "Japanese", "Global"],
+    "Korean": ["ko", "Korean", "Global"]
+  }
+}

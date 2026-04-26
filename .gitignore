@@ -2,6 +2,7 @@
 .env
 .env.*
 
+
 # Virtual Environments
 venv/
 .venv/
@@ -20,3 +21,7 @@ Thumbs.db
 *.csv
 *.json
 *.parquet
+
+# Exceptions
+!.env.example
+!data/init/*

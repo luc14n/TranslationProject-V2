@@ -4,7 +4,7 @@ CREATE TABLE Languages (
     LangID TEXT PRIMARY KEY NOT NULL, -- Two Letter Standard Language Code
     Name TEXT NOT NULL,
     Family TEXT NOT NULL,
-    Region TEXT NOT NULL
+    Region TEXT
 );
 
 CREATE TABLE Model (
