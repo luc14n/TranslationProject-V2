@@ -9,10 +9,9 @@ def init_dummy_database(
 ):
     """Creates a SQLite database using schema.sql and populates sample data."""
 
-    # Optional: remove the existing DB to start fresh with the new schema
+    # Skip re-initialization if the database already exists to preserve data across sessions
     if os.path.exists(db_name):
-        os.remove(db_name)
-        # return  # Skip re-initialization if the database already exists
+        return
 
     con = sqlite3.connect(db_name)
     cur = con.cursor()

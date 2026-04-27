@@ -51,6 +51,9 @@ CREATE TABLE Translations (
     Model INTEGER NOT NULL,
     Settings INTEGER,
     Ratings INTEGER,
+    LatencyMS REAL,
+    PromptTokens INTEGER,
+    CompletionTokens INTEGER,
     FOREIGN KEY (Refrence) REFERENCES Refrences(RefrenceID),
     FOREIGN KEY (Translation) REFERENCES Translations(TranslationID),
     FOREIGN KEY (Language) REFERENCES Languages(id),
@@ -58,4 +61,15 @@ CREATE TABLE Translations (
     FOREIGN KEY (Model) REFERENCES Model(ModelID),
     FOREIGN KEY (Settings) REFERENCES Settings(SettingID),
     FOREIGN KEY (Ratings) REFERENCES Ratings(RatingID)
+);
+
+CREATE TABLE Metrics (
+    MetricID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    Translation INTEGER NOT NULL,
+    LaBSE REAL,
+    Fidelity REAL,
+    BLEU REAL,
+    COMET REAL,
+    TTR REAL,
+    FOREIGN KEY (Translation) REFERENCES Translations(TranslationID)
 );

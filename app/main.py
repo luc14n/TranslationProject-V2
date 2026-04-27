@@ -5,6 +5,7 @@ from pathlib import Path
 # Local module imports
 from canvas import MplCanvas
 from database import init_dummy_database
+from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtSql import QSqlDatabase, QSqlTableModel
 from PyQt6.QtWidgets import (
     QApplication,
@@ -16,10 +17,21 @@ from PyQt6.QtWidgets import (
     QPushButton,
     QTableView,
     QTabWidget,
+    QTextEdit,
     QVBoxLayout,
     QWidget,
 )
-from workers import WorkerThread
+from workers import TranslationWorker, WorkerThread
+
+
+class StreamRedirector(QObject):
+    text_written = pyqtSignal(str)
+
+    def write(self, text):
+        self.text_written.emit(str(text))
+
+    def flush(self):
+        pass
 
 
 class MainWindow(QMainWindow):
@@ -87,6 +99,11 @@ class MainWindow(QMainWindow):
         tab = QWidget()
         layout = QVBoxLayout()
 
+        self.metric_selector = QComboBox()
+        self.metric_selector.addItems(["LaBSE", "Fidelity", "BLEU", "COMET", "TTR"])
+        self.metric_selector.currentTextChanged.connect(self.plot_data)
+        layout.addWidget(self.metric_selector)
+
         self.canvas = MplCanvas(self, width=5, height=4, dpi=100)
         layout.addWidget(self.canvas)
 
@@ -100,20 +117,30 @@ class MainWindow(QMainWindow):
 
     def plot_data(self):
         """Fetches data from SQLite and plots it on the canvas."""
+        selected_metric = self.metric_selector.currentText()
+        if not selected_metric:
+            selected_metric = "LaBSE"
+
         con = sqlite3.connect(self.db_name)
         cur = con.cursor()
-        # Count references by target language
-        cur.execute("SELECT Language, COUNT(*) FROM Refrences GROUP BY Language")
+        # Average score per Model for the selected metric
+        cur.execute(f"""
+            SELECT m2.Name, AVG(m1.{selected_metric})
+            FROM Translations t
+            JOIN Metrics m1 ON t.TranslationID = m1.Translation
+            JOIN Model m2 ON t.Model = m2.ModelID
+            GROUP BY m2.Name
+        """)
         data = cur.fetchall()
         con.close()
 
-        languages = [row[0] for row in data]
-        counts = [row[1] for row in data]
+        models = [row[0] for row in data]
+        scores = [row[1] if row[1] is not None else 0 for row in data]
 
         self.canvas.axes.cla()  # Clear current axes
-        self.canvas.axes.bar(languages, counts, color="skyblue")
-        self.canvas.axes.set_title("References per Language")
-        self.canvas.axes.set_ylabel("Number of References")
+        self.canvas.axes.bar(models, scores, color="skyblue")
+        self.canvas.axes.set_title(f"Average {selected_metric} Score per Model")
+        self.canvas.axes.set_ylabel(f"Average {selected_metric} Score")
         self.canvas.draw()
 
     # --- Tab 3: File Management ---
@@ -161,16 +188,46 @@ class MainWindow(QMainWindow):
         self.start_thread_btn.clicked.connect(self.start_worker_thread)
         layout.addWidget(self.start_thread_btn)
 
+        self.console_output = QTextEdit()
+        self.console_output.setReadOnly(True)
+        layout.addWidget(self.console_output)
+
+        self.redirector = StreamRedirector()
+        self.redirector.text_written.connect(self.append_console_text)
+        sys.stdout = self.redirector
+        sys.stderr = self.redirector
+
         tab.setLayout(layout)
         self.tabs.addTab(tab, "Multithreading")
+
+    def append_console_text(self, text):
+        if "\r" in text:
+            parts = text.split("\r")
+            for i, part in enumerate(parts):
+                if i > 0:
+                    cursor = self.console_output.textCursor()
+                    from PyQt6.QtGui import QTextCursor
+
+                    cursor.movePosition(QTextCursor.MoveOperation.StartOfBlock)
+                    cursor.movePosition(
+                        QTextCursor.MoveOperation.EndOfBlock,
+                        QTextCursor.MoveMode.KeepAnchor,
+                    )
+                    cursor.removeSelectedText()
+                if part:
+                    self.console_output.insertPlainText(part)
+        else:
+            self.console_output.insertPlainText(text)
+        self.console_output.ensureCursorVisible()
 
     def start_worker_thread(self):
         self.start_thread_btn.setEnabled(False)
         self.thread_label.setText("Thread Status: Running (0%)")
 
-        self.worker = WorkerThread()
+        self.worker = TranslationWorker()
         self.worker.progress_update.connect(self.update_thread_progress)
         self.worker.task_finished.connect(self.thread_complete)
+        self.worker.error_occurred.connect(self.thread_error)
         self.worker.start()
 
     def update_thread_progress(self, val):
@@ -178,6 +235,12 @@ class MainWindow(QMainWindow):
 
     def thread_complete(self, message):
         self.thread_label.setText(f"Thread Status: {message}")
+        self.start_thread_btn.setEnabled(True)
+        self.plot_data()
+
+    def thread_error(self, message):
+        self.thread_label.setText(f"Thread Status: Error")
+        QMessageBox.critical(self, "Pipeline Error", message)
         self.start_thread_btn.setEnabled(True)
 
 
